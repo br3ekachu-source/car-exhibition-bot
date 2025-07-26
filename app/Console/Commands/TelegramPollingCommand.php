@@ -96,7 +96,7 @@ class TelegramPollingCommand extends Command
         
         while (true) {
             try {
-                sleep(3);
+                sleep(1);
                 $response = Http::post(
                     "https://api.telegram.org/bot".env('TELEGRAM_BOT_TOKEN')."/getUpdates", 
                     ['offset' => $offset + 1, 'timeout' => 25]

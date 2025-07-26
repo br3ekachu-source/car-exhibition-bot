@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Console\Commands\TelegramPollingCommand;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class Participant extends Model
 {
@@ -48,15 +50,54 @@ class Participant extends Model
     {
         $message = match($this->status) {
             'approved' => "🎉 Ваша заявка на участие в автовыставке одобрена!",
-            'rejected' => "❌ Ваша заявка отклонена. Причина: " . $this->moderator_comment,
+            'rejected' => "❌ Ваша заявка отклонена.",
             default => ""
         };
 
+        if ($this->moderator_comment !== null && $this->moderator_comment !== '') {
+            $message .= "\n\nПричина: " . $this->moderator_comment;
+        }
+
+        $filename = match($this->status) {
+            'approved' => 'approved.png',
+            'rejected' => 'denied.png',
+            default => ''
+        };
+
         if (!empty($message)) {
-            Http::post("https://api.telegram.org/bot".env('TELEGRAM_BOT_TOKEN')."/sendMessage", [
-                'chat_id' => $this->telegram_id,
-                'text' => $message
-            ]);
+            $this->sendImageMessage($this->telegram_id, $message, $filename);
+        }
+    }
+
+    private function sendImageMessage($chatId, $text, $imageName, $replyMarkup = null)
+    {
+        $imagePath = storage_path('app/public/' . $imageName);
+        
+        if (!file_exists($imagePath)) {
+            return $this->sendMessage($chatId, "Ошибка: изображение не найдено");
+        }
+
+        try {
+            $data = [
+                'chat_id' => $chatId,
+                'caption' => $text,
+                'parse_mode' => 'HTML'
+            ];
+
+            if ($replyMarkup) {
+                $data['reply_markup'] = $replyMarkup;
+            }
+
+            $response = Http::attach(
+                'photo',
+                file_get_contents($imagePath),
+                $imageName
+            )->post("https://api.telegram.org/bot".env('TELEGRAM_BOT_TOKEN')."/sendPhoto", $data);
+            
+            return $response;
+        } catch (\Exception $e) {
+            Log::error('Failed to send photo', ['error' => $e->getMessage()]);
+            return $this->sendMessage($chatId, "Не удалось отправить изображение");
         }
     }
 }
