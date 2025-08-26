@@ -117,7 +117,7 @@ class TelegramPollingCommand extends Command
                 }
             } catch (\Exception $e) {
                 Log::error('Polling error', ['error' => $e->getMessage()]);
-                sleep(5);
+                sleep(1);
             }
         }
     }
