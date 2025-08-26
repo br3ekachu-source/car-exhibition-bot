@@ -85,8 +85,8 @@ class TelegramBotController extends Controller
                 
                 $keyboard = [
                     'keyboard' => [
-                        [['text' => '9 августа']],
-                        [['text' => '10 августа']],
+                        [['text' => '20 сентября']],
+                        [['text' => '21 сентября']],
                         [['text' => 'Оба дня']]
                     ],
                     'resize_keyboard' => true,
@@ -95,15 +95,15 @@ class TelegramBotController extends Controller
                 
                 $this->sendTelegramMessage(
                     $chatId, 
-                    'На сколько дней вы участвуете? (9 августа, 10 августа или оба дня)',
+                    'На сколько дней планируете? (20 сентября , 21 сентября, оба дня)',
                     json_encode($keyboard)
                 );
                 break;
                 
             case 'participation_days':
                 $daysMap = [
-                    '9 августа' => '9',
-                    '10 августа' => '10',
+                    '20 сентября' => '20',
+                    '21 сентября' => '21',
                     'Оба дня' => 'both'
                 ];
                 

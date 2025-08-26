@@ -74,8 +74,8 @@ class ParticipantResource extends Resource
                     ->label('Дни участия')
                     ->formatStateUsing(function (string $state) {
                         return match ($state) {
-                            '9' => '9 августа',
-                            '10' => '10 августа',
+                            '20' => '20 сентября',
+                            '21' => '21 сентября',
                             'both' => 'Оба дня',
                             default => $state,
                         };

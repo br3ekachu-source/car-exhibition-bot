@@ -40,8 +40,8 @@ class TelegramPollingCommand extends Command
     {
         $keyboard = [
             'keyboard' => [
-                [['text' => '9 августа']],
-                [['text' => '10 августа']],
+                [['text' => '20 сентября']],
+                [['text' => '21 сентября']],
                 [['text' => 'Оба дня']]
             ],
             'resize_keyboard' => true,
