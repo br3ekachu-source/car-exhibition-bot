@@ -143,7 +143,7 @@ class TelegramPollingCommand extends Command
                 'current_step' => 'name'
             ]);
             
-            $this->sendMessage($chatId, 'Добро пожаловать на регистрацию автовыставки! Введите ФИО:', fileName: 'register.png');
+            $this->sendMessage($chatId, 'Добро пожаловать на регистрацию участников! Введите ФИО:', fileName: 'register.png');
             return;
         }
         
@@ -189,8 +189,8 @@ class TelegramPollingCommand extends Command
                 
                 $keyboard = [
                     'keyboard' => [
-                        [['text' => '9 августа']],
-                        [['text' => '10 августа']],
+                        [['text' => '20 сентября']],
+                        [['text' => '21 сентября']],
                         [['text' => 'Оба дня']]
                     ],
                     'resize_keyboard' => true,
@@ -199,7 +199,7 @@ class TelegramPollingCommand extends Command
                 
                 $this->sendMessage(
                     $chatId, 
-                    'На сколько дней вы участвуете? (9 августа, 10 августа или оба дня)',
+                    'На сколько дней планируете? (20 сентября , 21 сентября, оба дня)',
                     json_encode($keyboard),
                     fileName: 'date.png'
                 );
@@ -207,8 +207,8 @@ class TelegramPollingCommand extends Command
                 
             case 'participation_days':
                 $daysMap = [
-                    '9 августа' => '9',
-                    '10 августа' => '10',
+                    '20 сентября' => '20',
+                    '21 сентября' => '21',
                     'Оба дня' => 'both'
                 ];
                 
@@ -216,7 +216,7 @@ class TelegramPollingCommand extends Command
                     'participation_days' => $daysMap[$text] ?? 'both',
                     'current_step' => 'photos'
                 ]);
-                $this->sendMessage($chatId, 'Пожалуйста, отправьте 3 горизонтальные фотографии вашего автомобиля (по одной за раз)', fileName: 'photo.png');
+                $this->sendMessage($chatId, 'Пришлите фото автомобиля. Минимум 3 штуки (по одной за раз)', fileName: 'photo.png');
                 break;
                 
             case 'photos':
