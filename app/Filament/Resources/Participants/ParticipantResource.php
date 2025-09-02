@@ -151,7 +151,6 @@ class ParticipantResource extends Resource
                 ->form([
                     Textarea::make('comment')
                         ->label('Причина отклонения')
-                        ->required()
                 ])
                 ->action(function (Participant $record, array $data) {
                     $record->update([
