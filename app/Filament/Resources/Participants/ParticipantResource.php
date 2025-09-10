@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Participants;
 
+use App\Exports\ParticipantsExport;
 use App\Filament\Resources\Participants\Pages\CreateParticipant;
 use App\Filament\Resources\Participants\Pages\EditParticipant;
 use App\Filament\Resources\Participants\Pages\ListParticipants;
@@ -14,6 +15,9 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
+use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
@@ -25,6 +29,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ParticipantResource extends Resource
 {
@@ -42,6 +47,15 @@ class ParticipantResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+->headerActions([
+    Action::make('export')
+        ->label('Экспорт в Excel')
+        ->icon('heroicon-o-arrow-down-tray')
+        ->color('success')
+        ->action(function () {
+            return Excel::download(new ParticipantsExport(), 'participants-' . date('Y-m-d') . '.xlsx');
+        })
+])
             ->columns([
                 TextColumn::make('name')
                     ->label('ФИО')
